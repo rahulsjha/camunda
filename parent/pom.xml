@@ -193,8 +193,13 @@
     <version.jna-platform>5.19.1</version.jna-platform>
     <version.liquibase>5.0.4</version.liquibase>
     <version.sqlformatter>2.0.5</version.sqlformatter>
+<<<<<<< HEAD
     <version.caffeine>3.2.4</version.caffeine>
     <version.commons-collections>20040616</version.commons-collections>
+=======
+    <version.caffeine>3.3.1</version.caffeine>
+    <version.commons-collections>3.2.2</version.commons-collections>
+>>>>>>> 8dfc5ec6 (deps: return commons-collections to 3.2.2)
     <version.reflections>0.10.2</version.reflections>
     <version.hikari-cp>7.1.0</version.hikari-cp>
     <version.picocli>4.7.7</version.picocli>
