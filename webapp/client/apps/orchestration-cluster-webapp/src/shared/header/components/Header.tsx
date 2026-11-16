@@ -105,7 +105,7 @@ const Header: React.FC<Props> = observer(({currentUser, initialSaasToken, childr
 		<>
 			<C4Provider theme={themeStore.actualTheme} dictionary={getC4Dictionary(locale)} locale={locale}>
 				<TooltipProvider>
-					<SidebarProvider>
+					<SidebarProvider collapsedWidth={SIDEBAR_COLLAPSED_WIDTH}>
 						<SidebarWidthSync hasSidebar={items.length > 0} />
 						<AppHeader
 							skipToContentTargetId="main-content"
@@ -133,7 +133,13 @@ const Header: React.FC<Props> = observer(({currentUser, initialSaasToken, childr
 							}
 						/>
 						{items.length > 0 && (
-							<AppSidebar ariaLabel={t('headerAppBarLabel')} items={items} linkComponent={Link} resizable={false} />
+							<AppSidebar
+								ariaLabel={t('headerAppBarLabel')}
+								items={items}
+								linkComponent={Link}
+								resizable={false}
+								collapsedWidth={SIDEBAR_COLLAPSED_WIDTH}
+							/>
 						)}
 					</SidebarProvider>
 				</TooltipProvider>

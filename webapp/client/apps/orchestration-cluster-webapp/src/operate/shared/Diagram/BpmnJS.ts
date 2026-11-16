@@ -74,6 +74,7 @@ class BpmnJS {
 	#shouldResetStaleSequenceFlows: boolean;
 	#navigatedViewer: InstanceType<typeof NavigatedViewer> | null = null;
 	#xml: string | null = null;
+	#fittedZoom: number | undefined;
 	#selectableElements: string[] = [];
 	#nonSelectableElements: string[] = [];
 	#selectedElementIds?: string[];
@@ -460,6 +461,20 @@ class BpmnJS {
 		if (canvas !== undefined) {
 			canvas.resized();
 			canvas.zoom('fit-viewport', 'auto');
+			this.#fittedZoom = canvas.zoom();
+		}
+	};
+
+	refitIfFitted = () => {
+		const canvas = this.#navigatedViewer?.get('canvas');
+		if (canvas === undefined) {
+			return;
+		}
+
+		if (this.#fittedZoom !== undefined && canvas.zoom() === this.#fittedZoom) {
+			this.zoomReset();
+		} else {
+			canvas.resized();
 		}
 	};
 

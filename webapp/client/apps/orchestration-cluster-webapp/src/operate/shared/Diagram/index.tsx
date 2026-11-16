@@ -189,6 +189,18 @@ function Diagram({
 		};
 	}, []);
 
+	useEffect(() => {
+		const canvas = diagramCanvasRef.current;
+		if (!isDiagramRendered || canvas === null) {
+			return;
+		}
+
+		const observer = new ResizeObserver(() => viewerRef.current?.refitIfFitted());
+		observer.observe(canvas);
+
+		return () => observer.disconnect();
+	}, [isDiagramRendered]);
+
 	return (
 		<DiagramOverlayContext.Provider value={activeOverlays}>
 			<DiagramContainer data-testid="diagram" ref={diagramRef} $isFullscreen={isFullscreen}>
