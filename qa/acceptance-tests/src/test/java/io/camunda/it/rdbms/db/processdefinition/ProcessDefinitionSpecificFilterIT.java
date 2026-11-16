@@ -320,6 +320,135 @@ public class ProcessDefinitionSpecificFilterIT {
         .containsExactly(9401L);
   }
 
+  @Test
+  public void shouldMatchNameLikeIgnoringCase() {
+    // given
+    createAndSaveProcessDefinition(
+        rdbmsWriters,
+        ProcessDefinitionFixtures.createRandomized(
+            b ->
+                b.processDefinitionKey(9501L)
+                    .processDefinitionId("ci-name-process")
+                    .name("Send INVOICE Now")
+                    .tenantId("ci-tenant")));
+
+    // when
+    final var searchResult =
+        processDefinitionReader.search(
+            ProcessDefinitionQuery.of(
+                b ->
+                    b.filter(
+                            FilterBuilders.processDefinition(
+                                f ->
+                                    f.tenantIds("ci-tenant")
+                                        .nameOperations(Operation.like("*invoice*"))))
+                        .sort(s -> s)
+                        .page(p -> p.from(0).size(10))));
+
+    // then
+    assertThat(searchResult.items())
+        .extracting(d -> d.processDefinitionKey())
+        .containsExactly(9501L);
+  }
+
+  @Test
+  public void shouldKeepNameEqualsExact() {
+    // given
+    createAndSaveProcessDefinition(
+        rdbmsWriters,
+        ProcessDefinitionFixtures.createRandomized(
+            b ->
+                b.processDefinitionKey(9511L)
+                    .processDefinitionId("ci-equals-process")
+                    .name("Send INVOICE Now")
+                    .tenantId("ci-equals-tenant")));
+
+    // when
+    final var searchResult =
+        processDefinitionReader.search(
+            ProcessDefinitionQuery.of(
+                b ->
+                    b.filter(
+                            FilterBuilders.processDefinition(
+                                f ->
+                                    f.tenantIds("ci-equals-tenant")
+                                        .nameOperations(Operation.eq("send invoice now"))))
+                        .sort(s -> s)
+                        .page(p -> p.from(0).size(10))));
+
+    // then
+    assertThat(searchResult.items()).isEmpty();
+  }
+
+  @Test
+  public void shouldKeepProcessDefinitionIdLikeCaseSensitive() {
+    // given
+    createAndSaveProcessDefinition(
+        rdbmsWriters,
+        ProcessDefinitionFixtures.createRandomized(
+            b ->
+                b.processDefinitionKey(9521L)
+                    .processDefinitionId("CI-Id-Process")
+                    .name("Some name")
+                    .tenantId("ci-id-tenant")));
+
+    // when
+    final var searchResult =
+        processDefinitionReader.search(
+            ProcessDefinitionQuery.of(
+                b ->
+                    b.filter(
+                            FilterBuilders.processDefinition(
+                                f ->
+                                    f.tenantIds("ci-id-tenant")
+                                        .processDefinitionIdOperations(
+                                            Operation.like("*id-process*"))))
+                        .sort(s -> s)
+                        .page(p -> p.from(0).size(10))));
+
+    // then
+    assertThat(searchResult.items()).isEmpty();
+  }
+
+  @Test
+  public void shouldKeepUnderscoreInNameLikeLiteral() {
+    // given
+    createAndSaveProcessDefinition(
+        rdbmsWriters,
+        ProcessDefinitionFixtures.createRandomized(
+            b ->
+                b.processDefinitionKey(9531L)
+                    .processDefinitionId("ci-underscore-process-1")
+                    .name("a_b report")
+                    .tenantId("ci-underscore-tenant")));
+    createAndSaveProcessDefinition(
+        rdbmsWriters,
+        ProcessDefinitionFixtures.createRandomized(
+            b ->
+                b.processDefinitionKey(9532L)
+                    .processDefinitionId("ci-underscore-process-2")
+                    .name("axb report")
+                    .tenantId("ci-underscore-tenant")));
+
+    // when
+    final var searchResult =
+        processDefinitionReader.search(
+            ProcessDefinitionQuery.of(
+                b ->
+                    b.filter(
+                            FilterBuilders.processDefinition(
+                                f ->
+                                    f.tenantIds("ci-underscore-tenant")
+                                        .nameOperations(Operation.like("a_b*"))))
+                        .sort(s -> s)
+                        .page(p -> p.from(0).size(10))));
+
+    // then: the underscore is literal, so "axb report" does not match
+    assertThat(searchResult.items())
+        .extracting(d -> d.processDefinitionKey())
+        .containsExactly(9531L);
+  }
+
   static List<ProcessDefinitionFilter> shouldFindProcessDefinitionWithSpecificFilterParameters() {
     return List.of(
         new ProcessDefinitionFilter.Builder().processDefinitionKeys(1337L).build(),
