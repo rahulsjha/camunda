@@ -98,7 +98,7 @@ public class ProcessDefinitionSuspensionHandler
     return switch (outcome) {
       case SUSPENDED -> ProcessDefinitionState.SUSPENDED;
       case RESUMED -> ProcessDefinitionState.ACTIVE;
-      case ALREADY_SUSPENDED, ALREADY_ACTIVE, DRAINING ->
+      case ALREADY_SUSPENDED, ALREADY_RESUMED, DRAINING ->
           throw new IllegalArgumentException("Outcome " + outcome + " does not change the state");
     };
   }

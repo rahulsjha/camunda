@@ -79,7 +79,7 @@ class ProcessDefinitionSuspensionHandlerTest {
                 version(12L, ProcessDefinitionSuspensionOutcome.ALREADY_SUSPENDED),
                 version(13L, ProcessDefinitionSuspensionOutcome.DRAINING),
                 version(14L, ProcessDefinitionSuspensionOutcome.RESUMED),
-                version(15L, ProcessDefinitionSuspensionOutcome.ALREADY_ACTIVE)));
+                version(15L, ProcessDefinitionSuspensionOutcome.ALREADY_RESUMED)));
 
     // when
     final var ids = underTest.generateIds(record);

@@ -43,7 +43,7 @@ public class ProcessDefinitionSuspensionExportHandler
               switch (version.getOutcome()) {
                 case SUSPENDED -> processDefinitionWriter.markSuspended(processDefinitionKey);
                 case RESUMED -> processDefinitionWriter.markActive(processDefinitionKey);
-                case ALREADY_SUSPENDED, ALREADY_ACTIVE, DRAINING -> {}
+                case ALREADY_SUSPENDED, ALREADY_RESUMED, DRAINING -> {}
               }
             });
   }
