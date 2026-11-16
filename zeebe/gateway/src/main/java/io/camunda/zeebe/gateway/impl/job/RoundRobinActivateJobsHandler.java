@@ -50,13 +50,13 @@ public final class RoundRobinActivateJobsHandler<T> implements ActivateJobsHandl
 
   static final int MAX_TRACKED_JOB_TYPES = 1024;
 
-  // Caffeine always evicts size-bounded caches by frequency (W-TinyLFU); there is no option to
-  // select it. We rely on that LFU behaviour so frequently polled job types are not displaced by
-  // a burst of one-off (e.g. expression-generated) types. Re-check this if replacing Caffeine.
+  // Bounded because job types can be expressions, so the set of types seen over the gateway's
+  // lifetime is unbounded and would otherwise leak memory.
   private final Cache<String, RoundRobinDispatchStrategy> jobTypeToNextPartitionId =
       Caffeine.newBuilder()
           .maximumSize(MAX_TRACKED_JOB_TYPES)
-          // evict on the calling thread instead of the shared ForkJoinPool.commonPool()
+          // Keeps cache maintenance off the JVM-wide common pool, which other components share and
+          // could starve; with at most 1024 tiny entries, evicting inline adds negligible latency.
           .executor(Runnable::run)
           .build();
   private final BrokerClient brokerClient;
