@@ -1,0 +1,18 @@
+# Before: main's SearchQueryBuilders.java with this PR's tests (maven 3.9.16, temurin 21)
+$ mvn -pl search/search-client-query-transformer -Dtest=UserTaskQueryTransformerTest test
+Tests run: 66, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 5.569 s <<< FAILURE! -- in io.camunda.search.clients.transformers.filter.UserTaskQueryTransformerTest
+io.camunda.search.clients.transformers.filter.UserTaskQueryTransformerTest.shouldQueryByCreationDateIn -- Time elapsed: 0.043 s <<< ERROR!
+java.lang.IllegalStateException: Unexpected Date operation: IN
+	at io.camunda.search.clients.query.SearchQueryBuilders.unexpectedOperation(SearchQueryBuilders.java:381)
+	at io.camunda.search.clients.query.SearchQueryBuilders.dateTimeOperations(SearchQueryBuilders.java:639)
+	at io.camunda.search.clients.transformers.filter.UserTaskFilterTransformer.getCreationTimeQuery(UserTaskFilterTransformer.java:245)
+	at io.camunda.search.clients.transformers.filter.UserTaskFilterTransformer.toSearchQueryFields(UserTaskFilterTransformer.java:113)
+	at io.camunda.search.clients.transformers.filter.UserTaskFilterTransformer.toSearchQuery(UserTaskFilterTransformer.java:83)
+--
+io.camunda.search.clients.transformers.filter.UserTaskQueryTransformerTest.shouldQueryByDueDateInTogetherWithRange -- Time elapsed: 0.016 s <<< ERROR!
+java.lang.IllegalStateException: Unexpected Date operation: IN
+	at io.camunda.search.clients.query.SearchQueryBuilders.unexpectedOperation(SearchQueryBuilders.java:381)
+	at io.camunda.search.clients.query.SearchQueryBuilders.dateTimeOperations(SearchQueryBuilders.java:639)
+	at io.camunda.search.clients.transformers.filter.UserTaskFilterTransformer.getDueDateQuery(UserTaskFilterTransformer.java:259)
+	at io.camunda.search.clients.transformers.filter.UserTaskFilterTransformer.toSearchQueryFields(UserTaskFilterTransformer.java:116)
+	at io.camunda.search.clients.transformers.filter.UserTaskFilterTransformer.toSearchQuery(UserTaskFilterTransformer.java:83)

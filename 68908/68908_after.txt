@@ -1,0 +1,8 @@
+# After: this PR (maven 3.9.16, temurin 21)
+$ mvn -pl search/search-client-query-transformer -am -Dtest=UserTaskQueryTransformerTest test
+[INFO] Tests run: 66, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+
+$ mvn -pl search/search-client-query-transformer -am -Dtest="io.camunda.search.clients.**" test   (the whole module)
+[INFO] Tests run: 1130, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
