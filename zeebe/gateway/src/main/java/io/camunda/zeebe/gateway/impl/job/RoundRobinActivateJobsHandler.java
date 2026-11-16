@@ -54,7 +54,11 @@ public final class RoundRobinActivateJobsHandler<T> implements ActivateJobsHandl
   // select it. We rely on that LFU behaviour so frequently polled job types are not displaced by
   // a burst of one-off (e.g. expression-generated) types. Re-check this if replacing Caffeine.
   private final Cache<String, RoundRobinDispatchStrategy> jobTypeToNextPartitionId =
-      Caffeine.newBuilder().maximumSize(MAX_TRACKED_JOB_TYPES).build();
+      Caffeine.newBuilder()
+          .maximumSize(MAX_TRACKED_JOB_TYPES)
+          // evict on the calling thread instead of the shared ForkJoinPool.commonPool()
+          .executor(Runnable::run)
+          .build();
   private final BrokerClient brokerClient;
   private final BrokerTopologyManager topologyManager;
   private final long maxMessageSize;
@@ -336,7 +340,6 @@ public final class RoundRobinActivateJobsHandler<T> implements ActivateJobsHandl
   }
 
   long trackedJobTypesCount() {
-    jobTypeToNextPartitionId.cleanUp();
     return jobTypeToNextPartitionId.estimatedSize();
   }
 
