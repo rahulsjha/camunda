@@ -43,13 +43,19 @@ final class SignInMonitor implements AutoCloseable {
 
   private static final Logger LOG = LoggerFactory.getLogger(SignInMonitor.class);
 
+  private final String physicalTenantId;
   private final String storeId;
   private final String vaultUrl;
   private final MeterRegistry meterRegistry;
   private final Counter failures;
   private final AtomicReference<State> state = new AtomicReference<>(State.STARTING);
 
-  SignInMonitor(final String storeId, final String vaultUrl, final MeterRegistry meterRegistry) {
+  SignInMonitor(
+      final String physicalTenantId,
+      final String storeId,
+      final String vaultUrl,
+      final MeterRegistry meterRegistry) {
+    this.physicalTenantId = physicalTenantId;
     this.storeId = storeId;
     this.vaultUrl = vaultUrl;
     this.meterRegistry = meterRegistry;
@@ -67,14 +73,17 @@ final class SignInMonitor implements AutoCloseable {
     switch (state.getAndSet(State.SIGNED_IN)) {
       case STARTING ->
           LOG.info(
-              "Azure Key Vault store '{}' for '{}' signed in with {}",
+              "Azure Key Vault store '{}' of physical tenant '{}' for '{}' signed in with {}",
               storeId,
+              physicalTenantId,
               vaultUrl,
               credential);
       case FAILING ->
           LOG.info(
-              "Azure Key Vault store '{}' for '{}' signed in again with {}, after failing to",
+              "Azure Key Vault store '{}' of physical tenant '{}' for '{}' signed in again with {},"
+                  + " after failing to",
               storeId,
+              physicalTenantId,
               vaultUrl,
               credential);
       case SIGNED_IN -> {}
@@ -91,21 +100,30 @@ final class SignInMonitor implements AutoCloseable {
     failures.increment();
     if (state.getAndSet(State.FAILING) != State.FAILING) {
       LOG.warn(
-          "Azure Key Vault store '{}' for '{}' failed to sign in with {}: {}. Further failures are"
-              + " logged at DEBUG until sign-in recovers, and counted on {}",
+          "Azure Key Vault store '{}' of physical tenant '{}' for '{}' failed to sign in with {}:"
+              + " {}. Further failures are logged at DEBUG until sign-in recovers, and counted"
+              + " on {}",
           storeId,
+          physicalTenantId,
           vaultUrl,
           credential,
           failure.getMessage(),
           SecretStoreMetricsDoc.SIGNIN_FAILURES.getName());
     } else {
       LOG.debug(
-          "Azure Key Vault store '{}' for '{}' failed to sign in with {} again",
+          "Azure Key Vault store '{}' of physical tenant '{}' for '{}' failed to sign in with {}"
+              + " again",
           storeId,
+          physicalTenantId,
           vaultUrl,
           credential,
           failure);
     }
+  }
+
+  /** Whether the last token request failed, and none has succeeded since. */
+  boolean isFailing() {
+    return state.get() == State.FAILING;
   }
 
   /**

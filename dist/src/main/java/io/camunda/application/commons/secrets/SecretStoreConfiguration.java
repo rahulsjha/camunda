@@ -367,6 +367,7 @@ public class SecretStoreConfiguration {
         storeId,
         tenantId);
     return AzureKeyVaultSecretStore.fromConfig(
+        tenantId,
         storeId,
         new AzureKeyVaultStoreConfig(
             vaultUrl,

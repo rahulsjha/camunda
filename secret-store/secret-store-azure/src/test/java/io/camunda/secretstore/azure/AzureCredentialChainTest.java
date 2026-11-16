@@ -31,6 +31,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 final class AzureCredentialChainTest {
 
+  private static final String PHYSICAL_TENANT = "pt1";
   private static final String VAULT_URL = "https://my-vault.vault.azure.net";
   private static final String US_GOVERNMENT_AUTHORITY = "https://login.microsoftonline.us/";
   private static final TokenRequestContext VAULT_SCOPE =
@@ -58,7 +59,7 @@ final class AzureCredentialChainTest {
             environment(Map.of()),
             StubAzureHttpClient.offline(),
             executor,
-            new SignInMonitor("default", VAULT_URL, new SimpleMeterRegistry()));
+            new SignInMonitor(PHYSICAL_TENANT, "default", VAULT_URL, new SimpleMeterRegistry()));
 
     // then — no developer login (Azure CLI, IDEs, PowerShell, Azure Developer CLI) is ever tried
     assertThat(credentials)
@@ -294,7 +295,7 @@ final class AzureCredentialChainTest {
         environment,
         http,
         executor,
-        new SignInMonitor("default", config.vaultUrl(), meterRegistry));
+        new SignInMonitor(PHYSICAL_TENANT, "default", config.vaultUrl(), meterRegistry));
   }
 
   private double signInFailures() {
