@@ -14,12 +14,14 @@ import {
 	mockGetProcessDefinitionInstanceStatisticsEndpoint,
 	mockLicenseEndpoint,
 	mockLogoutEndpoint,
+	mockQueryBatchOperationsEndpoint,
 	mockSystemConfigurationEndpoint,
 } from '#/shared-test-modules/mock-handlers';
 import {createSystemConfiguration} from '#/shared-test-modules/api-mocks/system-configuration';
 import {createLicense} from '#/shared-test-modules/api-mocks/license';
 import {createCurrentUser} from '#/shared-test-modules/api-mocks/current-user';
 import {createPaginatedResponse} from '#/shared-test-modules/api-mocks/shared';
+import {createQueryBatchOperationsResponse} from '#/shared-test-modules/api-mocks/batch-operations';
 
 const currentUserMock = createCurrentUser();
 
@@ -143,5 +145,32 @@ test.describe('language', () => {
 		await page.keyboard.press('Escape');
 
 		await expect(operateIndexPage.header.getUserMenuButton('Einstellungen')).toBeVisible();
+	});
+});
+
+test.describe('operations navigation group', () => {
+	test('should follow the current page and forget a manual toggle after navigating', async ({
+		network,
+		operateIndexPage,
+		page,
+	}) => {
+		network.use(
+			mockQueryBatchOperationsEndpoint({successResponse: HttpResponse.json(createQueryBatchOperationsResponse())}),
+		);
+		const operationsGroup = page.getByRole('button', {name: 'Operations', exact: true});
+
+		await operateIndexPage.goto();
+		await page.getByRole('button', {name: 'Expand sidebar'}).click();
+		await expect(operationsGroup).toHaveAttribute('aria-expanded', 'false');
+
+		await operationsGroup.hover();
+		await operationsGroup.click();
+		await expect(operationsGroup).toHaveAttribute('aria-expanded', 'true');
+
+		await page.getByRole('link', {name: 'Batch Operations'}).click();
+		await expect(operationsGroup).toHaveAttribute('aria-expanded', 'true');
+
+		await page.getByRole('link', {name: 'Dashboard', exact: true}).click();
+		await expect(operationsGroup).toHaveAttribute('aria-expanded', 'false');
 	});
 });

@@ -7,7 +7,7 @@
  */
 
 import {useState} from 'react';
-import {useMatchRoute} from '@tanstack/react-router';
+import {useMatchRoute, useRouterState} from '@tanstack/react-router';
 import {useTranslation} from 'react-i18next';
 import type {SidebarNode} from '@camunda/design-system';
 import type {AuthenticatedCurrentUser} from '@camunda/camunda-api-zod-schemas/8.11';
@@ -20,9 +20,13 @@ function useOperateSidebarNavigation({authorizedComponents}: AuthenticatedCurren
 	const isOperationsRoute =
 		matchRoute({to: '/operate/operations-log', fuzzy: true}) !== false ||
 		matchRoute({to: '/operate/batch-operations', fuzzy: true}) !== false;
-	const [expansion, setExpansion] = useState({isOperationsRoute, isExpanded: isOperationsRoute});
-	const isOperationsExpanded =
-		expansion.isOperationsRoute === isOperationsRoute ? expansion.isExpanded : isOperationsRoute;
+	const pathname = useRouterState({select: ({location}) => location.pathname});
+	const [toggle, setToggle] = useState<{pathname: string; isExpanded: boolean} | undefined>();
+	const isOperationsExpanded = toggle?.pathname === pathname ? toggle.isExpanded : isOperationsRoute;
+
+	if (toggle !== undefined && toggle.pathname !== pathname) {
+		setToggle(undefined);
+	}
 
 	if (!hasComponentAccess('operate', authorizedComponents)) {
 		return [];
@@ -34,7 +38,7 @@ function useOperateSidebarNavigation({authorizedComponents}: AuthenticatedCurren
 		base: '/operate',
 		operationsGroup: {
 			isExpanded: isOperationsExpanded,
-			onToggleExpand: (isExpanded) => setExpansion({isOperationsRoute, isExpanded}),
+			onToggleExpand: (isExpanded) => setToggle({pathname, isExpanded}),
 		},
 	});
 }
