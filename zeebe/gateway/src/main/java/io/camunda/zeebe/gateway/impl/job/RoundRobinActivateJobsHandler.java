@@ -7,6 +7,8 @@
  */
 package io.camunda.zeebe.gateway.impl.job;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import io.camunda.zeebe.auth.Authorization;
 import io.camunda.zeebe.broker.client.api.BrokerClient;
 import io.camunda.zeebe.broker.client.api.BrokerErrorException;
@@ -23,8 +25,6 @@ import io.camunda.zeebe.protocol.impl.record.value.job.JobBatchRecord;
 import io.camunda.zeebe.protocol.record.ErrorCode;
 import io.camunda.zeebe.scheduler.ActorControl;
 import io.camunda.zeebe.util.Either;
-import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
@@ -36,9 +36,9 @@ import java.util.function.Function;
  * Iterates in round-robin fashion over partitions to activate jobs. Uses a map from job type to
  * partition-IDs to determine the next partition to use.
  *
- * <p>The map is bounded to the {@link #MAX_TRACKED_JOB_TYPES} most recently used job types, as job
- * types can be expressions and may be unbounded. Untracked (new or evicted) job types start at a
- * random partition, which keeps the distribution uniform without additional state.
+ * <p>The map is bounded to the {@link #MAX_TRACKED_JOB_TYPES} most frequently used job types
+ * (W-TinyLFU), as job types can be expressions and may be unbounded. Untracked (new or evicted) job
+ * types start at a random partition, which keeps the distribution uniform without additional state.
  */
 public final class RoundRobinActivateJobsHandler<T> implements ActivateJobsHandler<T> {
 
@@ -50,15 +50,8 @@ public final class RoundRobinActivateJobsHandler<T> implements ActivateJobsHandl
 
   static final int MAX_TRACKED_JOB_TYPES = 1024;
 
-  private final Map<String, RoundRobinDispatchStrategy> jobTypeToNextPartitionId =
-      Collections.synchronizedMap(
-          new LinkedHashMap<>(16, 0.75f, true) {
-            @Override
-            protected boolean removeEldestEntry(
-                final Map.Entry<String, RoundRobinDispatchStrategy> eldest) {
-              return size() > MAX_TRACKED_JOB_TYPES;
-            }
-          });
+  private final Cache<String, RoundRobinDispatchStrategy> jobTypeToNextPartitionId =
+      Caffeine.newBuilder().maximumSize(MAX_TRACKED_JOB_TYPES).build();
   private final BrokerClient brokerClient;
   private final BrokerTopologyManager topologyManager;
   private final long maxMessageSize;
@@ -339,14 +332,15 @@ public final class RoundRobinActivateJobsHandler<T> implements ActivateJobsHandl
         reason);
   }
 
-  int trackedJobTypesCount() {
-    return jobTypeToNextPartitionId.size();
+  long trackedJobTypesCount() {
+    jobTypeToNextPartitionId.cleanUp();
+    return jobTypeToNextPartitionId.estimatedSize();
   }
 
   private PartitionIdIterator partitionIdIteratorForType(
       final String jobType, final int partitionsCount, final String partitionGroup) {
     final var nextPartitionSupplier =
-        jobTypeToNextPartitionId.computeIfAbsent(
+        jobTypeToNextPartitionId.get(
             jobType,
             t ->
                 new RoundRobinDispatchStrategy(

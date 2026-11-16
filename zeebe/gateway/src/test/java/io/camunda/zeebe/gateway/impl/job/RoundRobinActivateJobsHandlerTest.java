@@ -40,6 +40,6 @@ final class RoundRobinActivateJobsHandlerTest {
 
     // then
     assertThat(handler.trackedJobTypesCount())
-        .isEqualTo(RoundRobinActivateJobsHandler.MAX_TRACKED_JOB_TYPES);
+        .isEqualTo((long) RoundRobinActivateJobsHandler.MAX_TRACKED_JOB_TYPES);
   }
 }
