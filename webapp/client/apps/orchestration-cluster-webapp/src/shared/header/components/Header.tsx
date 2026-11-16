@@ -37,7 +37,6 @@ import {useOperateSidebarNavigation} from '#/shared/header/useOperateSidebarNavi
 import {Breadcrumbs} from '#/shared/header/shadcn.components/Breadcrumbs';
 
 const SIDEBAR_COLLAPSED_WIDTH = '3.5rem';
-const SIDEBAR_EXPANDED_WIDTH = '12.25rem';
 const LOGOUT_DELAY = 1000;
 
 function getSidebarWidth(hasSidebar: boolean, sidebar: ReturnType<typeof useSidebar>) {
@@ -137,11 +136,7 @@ const Header: React.FC<Props> = observer(({currentUser, initialSaasToken, childr
 		<>
 			<C4Provider theme={themeStore.actualTheme} dictionary={getC4Dictionary(locale)} locale={locale}>
 				<TooltipProvider>
-					<SidebarProvider
-						defaultExpanded={false}
-						defaultWidth={SIDEBAR_EXPANDED_WIDTH}
-						collapsedWidth={SIDEBAR_COLLAPSED_WIDTH}
-					>
+					<SidebarProvider>
 						<SidebarWidthSync hasSidebar={items.length > 0} />
 						<AppHeader
 							skipToContentTargetId="main-content"
@@ -159,7 +154,7 @@ const Header: React.FC<Props> = observer(({currentUser, initialSaasToken, childr
 									className="operate-header-breadcrumb"
 								/>
 							}
-							trailing={<HeaderBadges />}
+							trailing={<HeaderBadges hideLicenseBelow="48rem" />}
 							globalActions={globalActions}
 							actions={
 								<>
@@ -169,14 +164,7 @@ const Header: React.FC<Props> = observer(({currentUser, initialSaasToken, childr
 							}
 						/>
 						{items.length > 0 && (
-							<AppSidebar
-								ariaLabel={t('headerAppBarLabel')}
-								items={items}
-								linkComponent={Link}
-								resizable={false}
-								expandedWidth={SIDEBAR_EXPANDED_WIDTH}
-								collapsedWidth={SIDEBAR_COLLAPSED_WIDTH}
-							/>
+							<AppSidebar ariaLabel={t('headerAppBarLabel')} items={items} linkComponent={Link} resizable={false} />
 						)}
 					</SidebarProvider>
 				</TooltipProvider>

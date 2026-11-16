@@ -22,6 +22,14 @@ class Header extends View {
 		return this.page.getByRole('link', {name: 'Camunda logo'});
 	}
 
+	environmentBadge(stage: string) {
+		return this.page.getByRole('banner').getByText(`Environment: ${stage}`, {exact: true});
+	}
+
+	get breadcrumbs() {
+		return this.page.getByRole('navigation', {name: 'Camunda context'});
+	}
+
 	get userMenuButton() {
 		return this.page.getByRole('button', {name: 'Settings'});
 	}

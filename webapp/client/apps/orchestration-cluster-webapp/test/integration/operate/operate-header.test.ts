@@ -9,17 +9,29 @@
 import {test, expect} from '#/pw-modules/test-extend';
 import {HttpResponse} from 'msw';
 import {
+	mockC3ClustersEndpoint,
+	mockC3NotificationEventsEndpoint,
+	mockC3NotificationsEndpoint,
+	mockC3OrganizationsEndpoint,
 	mockCurrentUserEndpoint,
 	mockGetIncidentProcessInstanceStatisticsByErrorEndpoint,
 	mockGetProcessDefinitionInstanceStatisticsEndpoint,
 	mockLicenseEndpoint,
 	mockLogoutEndpoint,
 	mockQueryBatchOperationsEndpoint,
+	mockSaasTokenEndpoint,
 	mockSystemConfigurationEndpoint,
 } from '#/shared-test-modules/mock-handlers';
 import {createSystemConfiguration} from '#/shared-test-modules/api-mocks/system-configuration';
 import {createLicense} from '#/shared-test-modules/api-mocks/license';
 import {createCurrentUser} from '#/shared-test-modules/api-mocks/current-user';
+import {
+	SAAS_CLUSTER_ID,
+	SAAS_ORGANIZATION_ID,
+	createC3Cluster,
+	createC3Organization,
+	createSaasUserToken,
+} from '#/shared-test-modules/api-mocks/saas';
 import {createPaginatedResponse} from '#/shared-test-modules/api-mocks/shared';
 import {createQueryBatchOperationsResponse} from '#/shared-test-modules/api-mocks/batch-operations';
 
@@ -160,7 +172,6 @@ test.describe('operations navigation group', () => {
 		const operationsGroup = page.getByRole('button', {name: 'Operations', exact: true});
 
 		await operateIndexPage.goto();
-		await page.getByRole('button', {name: 'Expand sidebar'}).click();
 		await expect(operationsGroup).toHaveAttribute('aria-expanded', 'false');
 
 		await operationsGroup.hover();
@@ -172,5 +183,38 @@ test.describe('operations navigation group', () => {
 
 		await page.getByRole('link', {name: 'Dashboard', exact: true}).click();
 		await expect(operationsGroup).toHaveAttribute('aria-expanded', 'false');
+	});
+});
+
+test.describe('SaaS', () => {
+	test('should show the cluster environment badge and the context breadcrumbs', async ({
+		network,
+		operateIndexPage,
+		page,
+	}) => {
+		network.use(
+			mockSaasTokenEndpoint({successResponse: HttpResponse.json(createSaasUserToken())}),
+			mockC3OrganizationsEndpoint({successResponse: HttpResponse.json([createC3Organization()])}),
+			mockC3ClustersEndpoint({successResponse: HttpResponse.json([createC3Cluster({labels: {camunda: ['dev']}})])}),
+			mockC3NotificationsEndpoint({successResponse: HttpResponse.json([])}),
+			mockC3NotificationEventsEndpoint({
+				successResponse: new HttpResponse('', {headers: {'Content-Type': 'text/event-stream'}}),
+			}),
+		);
+		await page.addInitScript(
+			({organizationId, clusterId}) => {
+				new MutationObserver((_, observer) => {
+					observer.disconnect();
+					document.documentElement.dataset['organizationId'] = organizationId;
+					document.documentElement.dataset['clusterId'] = clusterId;
+				}).observe(document, {childList: true});
+			},
+			{organizationId: SAAS_ORGANIZATION_ID, clusterId: SAAS_CLUSTER_ID},
+		);
+
+		await operateIndexPage.goto();
+
+		await expect(operateIndexPage.header.environmentBadge('dev')).toBeVisible();
+		await expect(operateIndexPage.header.breadcrumbs).toBeVisible();
 	});
 });
