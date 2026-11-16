@@ -31,6 +31,7 @@ function getOperateSidebarItems({t, matchRoute, base, operationsGroup}: Options)
 	const decisions = `${base}/decisions` as RouteTo;
 	const operationsLog = `${base}/operations-log` as RouteTo;
 	const batchOperations = `${base}/batch-operations` as RouteTo;
+	const isDashboardRoute = matchRoute({to: dashboard, fuzzy: false}) !== false;
 	const isProcessesRoute = matchRoute({to: processes, fuzzy: true}) !== false;
 	const isDecisionsRoute = matchRoute({to: decisions, fuzzy: true}) !== false;
 	const isOperationsLogRoute = matchRoute({to: operationsLog, fuzzy: true}) !== false;
@@ -42,7 +43,7 @@ function getOperateSidebarItems({t, matchRoute, base, operationsGroup}: Options)
 			key: 'dashboard',
 			label: t('operate.dashboard.title'),
 			icon: LayoutDashboard,
-			isActive: !isProcessesRoute && !isDecisionsRoute && !isBatchOperationsRoute && !isOperationsLogRoute,
+			isActive: isDashboardRoute,
 			linkProps: {to: dashboard, activeOptions: {exact: true}},
 		},
 		{

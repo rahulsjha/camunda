@@ -187,11 +187,7 @@ test.describe('operations navigation group', () => {
 });
 
 test.describe('SaaS', () => {
-	test('should show the cluster environment badge and the context breadcrumbs', async ({
-		network,
-		operateIndexPage,
-		page,
-	}) => {
+	test('should show the cluster environment badge and the context breadcrumbs', async ({network, operateIndexPage}) => {
 		network.use(
 			mockSaasTokenEndpoint({successResponse: HttpResponse.json(createSaasUserToken())}),
 			mockC3OrganizationsEndpoint({successResponse: HttpResponse.json([createC3Organization()])}),
@@ -201,16 +197,7 @@ test.describe('SaaS', () => {
 				successResponse: new HttpResponse('', {headers: {'Content-Type': 'text/event-stream'}}),
 			}),
 		);
-		await page.addInitScript(
-			({organizationId, clusterId}) => {
-				new MutationObserver((_, observer) => {
-					observer.disconnect();
-					document.documentElement.dataset['organizationId'] = organizationId;
-					document.documentElement.dataset['clusterId'] = clusterId;
-				}).observe(document, {childList: true});
-			},
-			{organizationId: SAAS_ORGANIZATION_ID, clusterId: SAAS_CLUSTER_ID},
-		);
+		await operateIndexPage.seedSaasBootConfig({organizationId: SAAS_ORGANIZATION_ID, clusterId: SAAS_CLUSTER_ID});
 
 		await operateIndexPage.goto();
 

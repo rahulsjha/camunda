@@ -8,7 +8,7 @@
 
 import '@camunda/design-system/styles.css';
 import './Header.css';
-import {useCallback, useLayoutEffect, useMemo} from 'react';
+import {useCallback, useLayoutEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {observer} from 'mobx-react-lite';
 import {Link} from '@tanstack/react-router';
@@ -21,11 +21,8 @@ import {
 	TooltipProvider,
 	useSidebar,
 } from '@camunda/design-system';
-import {SaasNotifications} from '@camunda/oc-saas-notifications';
-import {useC3Profile} from '@camunda/camunda-composite-components';
 import type {AuthenticatedCurrentUser} from '@camunda/camunda-api-zod-schemas/8.11';
 import {authenticationStore} from '#/shared/auth/authentication.store';
-import {getBootConfig} from '#/shared/config/getBootConfig';
 import {getClientConfig} from '#/shared/config/getClientConfig';
 import {getC4Dictionary, getC4Locale} from '#/shared/i18n/shadcn.components/c4-dictionaries';
 import {notificationsStore} from '#/shared/notifications/notifications.store';
@@ -33,6 +30,8 @@ import {themeStore} from '#/shared/theme/theme';
 import {AccountMenu} from '#/shared/header/shadcn.components/AccountMenu';
 import {HeaderBadges} from '#/shared/header/shadcn.components/HeaderBadges';
 import {HelpMenu} from '#/shared/header/shadcn.components/HelpMenu';
+import {SaasAccountMenu} from '#/shared/header/shadcn.components/SaasAccountMenu';
+import {useSaasGlobalActions} from '#/shared/header/shadcn.components/useSaasGlobalActions';
 import {useOperateSidebarNavigation} from '#/shared/header/useOperateSidebarNavigation';
 import {Breadcrumbs} from '#/shared/header/shadcn.components/Breadcrumbs';
 
@@ -62,12 +61,6 @@ const SidebarWidthSync: React.FC<{hasSidebar: boolean}> = ({hasSidebar}) => {
 	return null;
 };
 
-const SaasAccountMenu: React.FC<React.ComponentProps<typeof AccountMenu>> = (props) => {
-	const {onThemeChange} = useC3Profile();
-
-	return <AccountMenu {...props} onThemeChange={onThemeChange} />;
-};
-
 type Props = {
 	currentUser: AuthenticatedCurrentUser;
 	initialSaasToken: string | null;
@@ -78,33 +71,9 @@ const Header: React.FC<Props> = observer(({currentUser, initialSaasToken, childr
 	const {t, i18n} = useTranslation();
 	const items = useOperateSidebarNavigation(currentUser);
 	const {canLogout} = getClientConfig().authentication;
-	const {organizationId, clusterId} = getBootConfig();
-	const isSaas = organizationId !== null && clusterId !== null && initialSaasToken !== null;
+	const {isSaas, globalActions} = useSaasGlobalActions(initialSaasToken);
 	const locale = getC4Locale(i18n.resolvedLanguage);
 	const displayName = currentUser.displayName ?? currentUser.username;
-
-	const globalActions = useMemo(
-		() =>
-			isSaas
-				? [
-						{
-							key: 'notifications',
-							label: t('headerNotificationsLabel'),
-							element: (
-								<SaasNotifications
-									locale={i18n.resolvedLanguage}
-									labels={{
-										title: t('headerNotificationsLabel'),
-										loading: t('headerNotificationsLoading'),
-										empty: t('headerNotificationsEmptyDescription'),
-									}}
-								/>
-							),
-						},
-					]
-				: undefined,
-		[i18n.resolvedLanguage, isSaas, t],
-	);
 
 	const handleLogout = useCallback(() => {
 		notificationsStore.displayNotification({
