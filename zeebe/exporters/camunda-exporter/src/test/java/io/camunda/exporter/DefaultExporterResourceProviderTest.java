@@ -20,7 +20,6 @@ import io.camunda.exporter.errorhandling.Error;
 import io.camunda.exporter.exceptions.PersistenceException;
 import io.camunda.exporter.handlers.ExportHandler;
 import io.camunda.exporter.handlers.ProcessCreatedHandler;
-import io.camunda.exporter.handlers.ProcessDefinitionSuspensionHandler;
 import io.camunda.exporter.handlers.ProcessDrainingHandler;
 import io.camunda.exporter.handlers.ProcessFullyDeletedHandler;
 import io.camunda.exporter.handlers.auditlog.AuditLogCleanupHandler;
@@ -406,7 +405,6 @@ public class DefaultExporterResourceProviderTest {
     assertThat(handlers).anyMatch(ProcessCreatedHandler.class::isInstance);
     assertThat(handlers).anyMatch(ProcessDrainingHandler.class::isInstance);
     assertThat(handlers).anyMatch(ProcessFullyDeletedHandler.class::isInstance);
-    assertThat(handlers).anyMatch(ProcessDefinitionSuspensionHandler.class::isInstance);
   }
 
   @Test
@@ -428,7 +426,6 @@ public class DefaultExporterResourceProviderTest {
     assertThat(handlers).anyMatch(ProcessCreatedHandler.class::isInstance);
     assertThat(handlers).noneMatch(ProcessDrainingHandler.class::isInstance);
     assertThat(handlers).noneMatch(ProcessFullyDeletedHandler.class::isInstance);
-    assertThat(handlers).noneMatch(ProcessDefinitionSuspensionHandler.class::isInstance);
   }
 
   @Test

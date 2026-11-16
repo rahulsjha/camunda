@@ -381,9 +381,6 @@ class RdbmsExporterWrapperTest {
         .as("Should not register PROCESS handler on partition 2")
         .doesNotContainKey(ValueType.PROCESS);
     assertThat(registeredHandlers)
-        .as("Should not register PROCESS_DEFINITION_SUSPENSION handler on partition 2")
-        .doesNotContainKey(ValueType.PROCESS_DEFINITION_SUSPENSION);
-    assertThat(registeredHandlers)
         .as("Should not register MAPPING_RULE handler on partition 2")
         .doesNotContainKey(ValueType.MAPPING_RULE);
     assertThat(registeredHandlers)

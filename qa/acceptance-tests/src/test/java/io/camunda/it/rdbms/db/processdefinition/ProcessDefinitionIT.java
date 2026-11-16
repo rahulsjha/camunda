@@ -935,13 +935,17 @@ public class ProcessDefinitionIT {
     final RdbmsWriters rdbmsWriters = rdbmsService.createWriter(PARTITION_ID);
     final ProcessDefinitionDbReader processDefinitionReader =
         rdbmsService.getProcessDefinitionReader();
+
+    // given
     final var key =
         createAndSaveRandomProcessDefinition(rdbmsWriters, b -> b).processDefinitionKey();
-
     rdbmsWriters.getProcessDefinitionWriter().markSuspended(key);
+
+    // when
     rdbmsWriters.getProcessDefinitionWriter().markDraining(key);
     rdbmsWriters.flush();
 
+    // then
     assertThat(processDefinitionReader.findOne(key).orElseThrow().state())
         .isEqualTo(ProcessDefinitionState.DRAINING);
   }

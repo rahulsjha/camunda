@@ -7,7 +7,6 @@
  */
 package io.camunda.exporter.rdbms.handlers;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -24,9 +23,6 @@ import io.camunda.zeebe.protocol.record.value.ProcessDefinitionSuspensionResolve
 import io.camunda.zeebe.test.broker.protocol.ProtocolFactory;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
-import org.junit.jupiter.params.provider.EnumSource.Mode;
 
 class ProcessDefinitionSuspensionExportHandlerTest {
 
@@ -35,34 +31,6 @@ class ProcessDefinitionSuspensionExportHandlerTest {
       mock(ProcessDefinitionWriter.class);
   private final ProcessDefinitionSuspensionExportHandler underTest =
       new ProcessDefinitionSuspensionExportHandler(processDefinitionWriter);
-
-  @ParameterizedTest
-  @EnumSource(
-      value = ProcessDefinitionSuspensionIntent.class,
-      names = {"SUSPENDED", "RESUMED"},
-      mode = Mode.INCLUDE)
-  void shouldExportHandledEvents(final ProcessDefinitionSuspensionIntent intent) {
-    // given
-    final Record<ProcessDefinitionSuspensionRecordValue> record =
-        suspensionRecord(intent, 999L, List.of());
-
-    // when - then
-    assertThat(underTest.canExport(record)).isTrue();
-  }
-
-  @ParameterizedTest
-  @EnumSource(
-      value = ProcessDefinitionSuspensionIntent.class,
-      names = {"SUSPENDED", "RESUMED"},
-      mode = Mode.EXCLUDE)
-  void shouldNotExportCommands(final ProcessDefinitionSuspensionIntent intent) {
-    // given
-    final Record<ProcessDefinitionSuspensionRecordValue> record =
-        suspensionRecord(intent, 999L, List.of());
-
-    // when - then
-    assertThat(underTest.canExport(record)).isFalse();
-  }
 
   @Test
   void shouldMarkOnlySuspendedVersionsOnSuspendedRecord() {

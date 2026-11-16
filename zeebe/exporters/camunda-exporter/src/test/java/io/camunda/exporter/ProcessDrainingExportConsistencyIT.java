@@ -33,6 +33,7 @@ import io.camunda.zeebe.protocol.record.value.ImmutableProcessDefinitionSuspensi
 import io.camunda.zeebe.protocol.record.value.ImmutableProcessDefinitionSuspensionResolvedVersionValue;
 import io.camunda.zeebe.protocol.record.value.ProcessDefinitionSuspensionOutcome;
 import io.camunda.zeebe.protocol.record.value.ProcessDefinitionSuspensionRecordValue;
+import io.camunda.zeebe.protocol.record.value.ProcessDefinitionSuspensionResolvedVersionValue;
 import io.camunda.zeebe.protocol.record.value.deployment.ImmutableProcess;
 import io.camunda.zeebe.protocol.record.value.deployment.Process;
 import io.camunda.zeebe.test.broker.protocol.ProtocolFactory;
@@ -61,6 +62,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 final class ProcessDrainingExportConsistencyIT {
 
   private static final long PROCESS_DEFINITION_KEY = 2_251_799_813_685_862L;
+  private static final long NEWER_PROCESS_DEFINITION_KEY = PROCESS_DEFINITION_KEY + 1;
   private static final int DEPLOYMENT_PARTITION =
       DefaultExporterResourceProvider.PROCESS_DEFINITION_PARTITION;
   private static final int OTHER_PARTITION = DEPLOYMENT_PARTITION + 1;
@@ -124,11 +126,15 @@ final class ProcessDrainingExportConsistencyIT {
     // given
     prepareConfig(config);
     createSchemas(config);
-    exportOnPartition(config, DEPLOYMENT_PARTITION, processRecord(ProcessIntent.CREATED));
+    exportOnPartition(config, DEPLOYMENT_PARTITION, ProcessIntent.CREATED);
 
     // when
     exportOnPartition(
-        config, DEPLOYMENT_PARTITION, suspensionRecord(SUSPENDED, PROCESS_DEFINITION_KEY));
+        config,
+        DEPLOYMENT_PARTITION,
+        suspensionRecord(
+            ProcessDefinitionSuspensionIntent.SUSPENDED,
+            version(PROCESS_DEFINITION_KEY, SUSPENDED)));
     clientAdapter.refresh(testPrefix);
 
     // then
@@ -137,12 +143,70 @@ final class ProcessDrainingExportConsistencyIT {
 
     // when
     exportOnPartition(
-        config, DEPLOYMENT_PARTITION, suspensionRecord(RESUMED, PROCESS_DEFINITION_KEY));
+        config,
+        DEPLOYMENT_PARTITION,
+        suspensionRecord(
+            ProcessDefinitionSuspensionIntent.RESUMED, version(PROCESS_DEFINITION_KEY, RESUMED)));
     clientAdapter.refresh(testPrefix);
 
     // then
     assertThat(stateOf(config, clientAdapter, PROCESS_DEFINITION_KEY))
         .isEqualTo(ProcessDefinitionState.ACTIVE);
+  }
+
+  @TestTemplate
+  void shouldKeepDrainingVersionWhenAllVersionsAreSuspended(
+      final ExporterConfiguration config, final SearchClientAdapter clientAdapter)
+      throws IOException {
+    // given - an older draining version and a newer active one
+    prepareConfig(config);
+    createSchemas(config);
+    exportOnPartition(
+        config,
+        DEPLOYMENT_PARTITION,
+        processRecord(ProcessIntent.CREATED, DEPLOYMENT_PARTITION, PROCESS_DEFINITION_KEY),
+        processRecord(ProcessIntent.DRAINING, DEPLOYMENT_PARTITION, PROCESS_DEFINITION_KEY),
+        processRecord(ProcessIntent.CREATED, DEPLOYMENT_PARTITION, NEWER_PROCESS_DEFINITION_KEY));
+
+    // when
+    exportOnPartition(
+        config,
+        DEPLOYMENT_PARTITION,
+        suspensionRecord(
+            ProcessDefinitionSuspensionIntent.SUSPENDED,
+            version(PROCESS_DEFINITION_KEY, ProcessDefinitionSuspensionOutcome.DRAINING),
+            version(NEWER_PROCESS_DEFINITION_KEY, SUSPENDED)));
+    clientAdapter.refresh(testPrefix);
+
+    // then
+    assertThat(stateOf(config, clientAdapter, PROCESS_DEFINITION_KEY))
+        .isEqualTo(ProcessDefinitionState.DRAINING);
+    assertThat(stateOf(config, clientAdapter, NEWER_PROCESS_DEFINITION_KEY))
+        .isEqualTo(ProcessDefinitionState.SUSPENDED);
+  }
+
+  @TestTemplate
+  void shouldMarkSuspendedVersionDrainingWhenDeleted(
+      final ExporterConfiguration config, final SearchClientAdapter clientAdapter)
+      throws IOException {
+    // given
+    prepareConfig(config);
+    createSchemas(config);
+    exportOnPartition(config, DEPLOYMENT_PARTITION, ProcessIntent.CREATED);
+    exportOnPartition(
+        config,
+        DEPLOYMENT_PARTITION,
+        suspensionRecord(
+            ProcessDefinitionSuspensionIntent.SUSPENDED,
+            version(PROCESS_DEFINITION_KEY, SUSPENDED)));
+
+    // when
+    exportOnPartition(config, DEPLOYMENT_PARTITION, ProcessIntent.DRAINING);
+    clientAdapter.refresh(testPrefix);
+
+    // then
+    assertThat(stateOf(config, clientAdapter, PROCESS_DEFINITION_KEY))
+        .isEqualTo(ProcessDefinitionState.DRAINING);
   }
 
   private void prepareConfig(final ExporterConfiguration config) {
@@ -188,21 +252,12 @@ final class ProcessDrainingExportConsistencyIT {
   }
 
   private Record<ProcessDefinitionSuspensionRecordValue> suspensionRecord(
-      final ProcessDefinitionSuspensionOutcome outcome, final long processDefinitionKey) {
-    final var intent =
-        outcome == SUSPENDED
-            ? ProcessDefinitionSuspensionIntent.SUSPENDED
-            : ProcessDefinitionSuspensionIntent.RESUMED;
+      final ProcessDefinitionSuspensionIntent intent,
+      final ProcessDefinitionSuspensionResolvedVersionValue... versions) {
     final var value =
         ImmutableProcessDefinitionSuspensionRecordValue.builder()
             .from(factory.generateObject(ImmutableProcessDefinitionSuspensionRecordValue.class))
-            .withResolvedVersions(
-                List.of(
-                    ImmutableProcessDefinitionSuspensionResolvedVersionValue.builder()
-                        .withProcessDefinitionKey(processDefinitionKey)
-                        .withVersion(1)
-                        .withOutcome(outcome)
-                        .build()))
+            .withResolvedVersions(List.of(versions))
             .build();
     return factory.generateRecord(
         ValueType.PROCESS_DEFINITION_SUSPENSION,
@@ -214,6 +269,15 @@ final class ProcessDrainingExportConsistencyIT {
                 .withValue(value));
   }
 
+  private static ProcessDefinitionSuspensionResolvedVersionValue version(
+      final long processDefinitionKey, final ProcessDefinitionSuspensionOutcome outcome) {
+    return ImmutableProcessDefinitionSuspensionResolvedVersionValue.builder()
+        .withProcessDefinitionKey(processDefinitionKey)
+        .withVersion(1)
+        .withOutcome(outcome)
+        .build();
+  }
+
   private ProcessDefinitionState stateOf(
       final ExporterConfiguration config,
       final SearchClientAdapter clientAdapter,
@@ -222,10 +286,6 @@ final class ProcessDrainingExportConsistencyIT {
     return clientAdapter
         .get(String.valueOf(processDefinitionKey), processIndexName(config), ProcessEntity.class)
         .getState();
-  }
-
-  private Record<Process> processRecord(final ProcessIntent intent) {
-    return processRecord(intent, DEPLOYMENT_PARTITION, PROCESS_DEFINITION_KEY);
   }
 
   private Record<Process> processRecord(final ProcessIntent intent, final int partitionId) {
