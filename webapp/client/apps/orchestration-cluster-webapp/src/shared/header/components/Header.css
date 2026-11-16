@@ -11,6 +11,12 @@
 	--background: var(--cds-background);
 }
 
+.operate-page-content {
+	height: calc(100dvh - var(--cds-spacing-09));
+	padding-left: var(--app-sidebar-width, 0);
+	transition: padding-left 0.15s ease-out;
+}
+
 @media (width < 48rem) {
 	[data-slot='app-header'] > div:has(.operate-header-logo),
 	.operate-header-breadcrumb [data-slot='nav-breadcrumb-separator'],

@@ -84,9 +84,9 @@ const Route = createFileRoute('/_carbon/_auth')({
 		);
 	},
 	notFoundComponent: () => (
-		<main className="cds--content">
+		<div className="cds--content">
 			<NotFoundPage />
-		</main>
+		</div>
 	),
 });
 

@@ -6,6 +6,7 @@
  * except in compliance with the Camunda License 1.0.
  */
 
+import {useState} from 'react';
 import {useMatchRoute} from '@tanstack/react-router';
 import {useTranslation} from 'react-i18next';
 import {GitBranch, History, LayoutDashboard, Layers, Settings2, Workflow} from '@camunda/design-system/icons';
@@ -16,15 +17,18 @@ import {hasComponentAccess} from '#/shared/componentAccess';
 function useOperateSidebarNavigation({authorizedComponents}: AuthenticatedCurrentUser): SidebarNode[] {
 	const {t} = useTranslation();
 	const matchRoute = useMatchRoute();
-
-	if (!hasComponentAccess('operate', authorizedComponents)) {
-		return [];
-	}
-
 	const isProcessesRoute = matchRoute({to: '/operate/processes', fuzzy: true}) !== false;
 	const isDecisionsRoute = matchRoute({to: '/operate/decisions', fuzzy: true}) !== false;
 	const isOperationsLogRoute = matchRoute({to: '/operate/operations-log', fuzzy: true}) !== false;
 	const isBatchOperationsRoute = matchRoute({to: '/operate/batch-operations', fuzzy: true}) !== false;
+	const isOperationsRoute = isOperationsLogRoute || isBatchOperationsRoute;
+	const [expansion, setExpansion] = useState({isOperationsRoute, isExpanded: isOperationsRoute});
+	const isOperationsExpanded =
+		expansion.isOperationsRoute === isOperationsRoute ? expansion.isExpanded : isOperationsRoute;
+
+	if (!hasComponentAccess('operate', authorizedComponents)) {
+		return [];
+	}
 
 	return [
 		{
@@ -64,6 +68,8 @@ function useOperateSidebarNavigation({authorizedComponents}: AuthenticatedCurren
 			key: 'operations',
 			label: t('operate.operations.title'),
 			icon: Settings2,
+			isExpanded: isOperationsExpanded,
+			onToggleExpand: (isExpanded) => setExpansion({isOperationsRoute, isExpanded}),
 			children: [
 				{
 					type: 'item',

@@ -20,7 +20,7 @@ const CarbonBreadcrumb = styled(Breadcrumb)`
 	padding-left: var(--cds-spacing-05);
 `;
 
-const Container = styled.main`
+const Container = styled.div`
 	height: 100%;
 	position: relative;
 `;

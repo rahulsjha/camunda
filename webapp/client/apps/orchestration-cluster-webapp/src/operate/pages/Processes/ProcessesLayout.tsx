@@ -12,7 +12,7 @@ import styled from 'styled-components';
 import {InstancesList} from '#/operate/shared/InstancesList/InstancesList';
 import {VisuallyHiddenH1} from '#/operate/shared/VisuallyHiddenH1/VisuallyHiddenH1';
 
-const Container = styled.main`
+const Container = styled.div`
 	height: 100%;
 `;
 

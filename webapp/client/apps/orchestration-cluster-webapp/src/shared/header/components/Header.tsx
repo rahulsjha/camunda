@@ -35,7 +35,6 @@ import {HeaderBadges} from '#/shared/header/shadcn.components/HeaderBadges';
 import {HelpMenu} from '#/shared/header/shadcn.components/HelpMenu';
 import {useOperateSidebarNavigation} from '#/shared/header/useOperateSidebarNavigation';
 import {Breadcrumbs} from './Breadcrumbs';
-import {PageContent} from './styled';
 
 const SIDEBAR_COLLAPSED_WIDTH = '3.5rem';
 const SIDEBAR_EXPANDED_WIDTH = '12.25rem';
@@ -175,7 +174,9 @@ const Header: React.FC<Props> = observer(({currentUser, initialSaasToken, childr
 					</SidebarProvider>
 				</TooltipProvider>
 			</C4Provider>
-			<PageContent>{children}</PageContent>
+			<main id="main-content" tabIndex={-1} className="operate-page-content">
+				{children}
+			</main>
 		</>
 	);
 });
