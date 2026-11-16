@@ -34,7 +34,7 @@ import {AccountMenu} from '#/shared/header/shadcn.components/AccountMenu';
 import {HeaderBadges} from '#/shared/header/shadcn.components/HeaderBadges';
 import {HelpMenu} from '#/shared/header/shadcn.components/HelpMenu';
 import {useOperateSidebarNavigation} from '#/shared/header/useOperateSidebarNavigation';
-import {Breadcrumbs} from './Breadcrumbs';
+import {Breadcrumbs} from '#/shared/header/shadcn.components/Breadcrumbs';
 
 const SIDEBAR_COLLAPSED_WIDTH = '3.5rem';
 const SIDEBAR_EXPANDED_WIDTH = '12.25rem';
@@ -151,7 +151,14 @@ const Header: React.FC<Props> = observer(({currentUser, initialSaasToken, childr
 									<CamundaLogo className="operate-header-logo block" />
 								</Link>
 							}
-							breadcrumb={<Breadcrumbs webappLinks={currentUser.c8Links} />}
+							breadcrumb={
+								<Breadcrumbs
+									currentApp="operate"
+									webappLinks={currentUser.c8Links}
+									operateBase="/operate"
+									className="operate-header-breadcrumb"
+								/>
+							}
 							trailing={<HeaderBadges />}
 							globalActions={globalActions}
 							actions={
