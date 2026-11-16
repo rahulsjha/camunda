@@ -280,7 +280,7 @@
               },
               "name": {
                 "type": "string",
-                "description": "Name of this process definition."
+                "description": "Name of this process definition. The `$like` operator matches the name case-insensitively. All other operators match exactly. "
               },
               "processDefinitionId": {
                 "type": "string",

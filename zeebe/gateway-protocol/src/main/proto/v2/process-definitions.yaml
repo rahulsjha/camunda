@@ -443,7 +443,9 @@ components:
         name:
           allOf:
             - $ref: 'filters.yaml#/components/schemas/StringFilterProperty'
-          description: Name of this process definition.
+          description: |
+            Name of this process definition.
+            The `$like` operator matches the name case-insensitively. All other operators match exactly.
         processDefinitionId:
           allOf:
             - $ref: 'filters.yaml#/components/schemas/StringFilterProperty'
@@ -456,7 +458,9 @@ components:
         name:
           allOf:
             - $ref: 'filters.yaml#/components/schemas/StringFilterProperty'
-          description: Name of this process definition.
+          description: |
+            Name of this process definition.
+            The `$like` operator matches the name case-insensitively. All other operators match exactly.
         isLatestVersion:
           description: |
             Whether to only return the latest version of each process definition.
