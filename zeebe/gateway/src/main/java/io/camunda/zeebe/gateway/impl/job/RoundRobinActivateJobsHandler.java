@@ -37,8 +37,8 @@ import java.util.function.Function;
  * partition-IDs to determine the next partition to use.
  *
  * <p>The map is bounded to the {@link #MAX_TRACKED_JOB_TYPES} most frequently used job types
- * (W-TinyLFU), as job types can be expressions and may be unbounded. Untracked (new or evicted) job
- * types start at a random partition, which keeps the distribution uniform without additional state.
+ * (W-TinyLFU), as job types are user input and thus unbounded. Untracked (new or evicted) job types
+ * start at a random partition, which keeps the distribution uniform without additional state.
  */
 public final class RoundRobinActivateJobsHandler<T> implements ActivateJobsHandler<T> {
 
@@ -50,8 +50,8 @@ public final class RoundRobinActivateJobsHandler<T> implements ActivateJobsHandl
 
   static final int MAX_TRACKED_JOB_TYPES = 1024;
 
-  // Bounded because job types can be expressions, so the set of types seen over the gateway's
-  // lifetime is unbounded and would otherwise leak memory.
+  // Bounded because job types are user input, so their domain is unbounded and tracking every
+  // type seen over the gateway's lifetime would leak memory.
   private final Cache<String, RoundRobinDispatchStrategy> jobTypeToNextPartitionId =
       Caffeine.newBuilder()
           .maximumSize(MAX_TRACKED_JOB_TYPES)
