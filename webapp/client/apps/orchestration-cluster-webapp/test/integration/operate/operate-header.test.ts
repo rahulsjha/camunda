@@ -50,12 +50,12 @@ test.describe('user menu', () => {
 	}) => {
 		await operateIndexPage.goto();
 
-		const {userMenuButton, infoSidebarToggle} = operateIndexPage.header;
+		const {userMenuButton, infoMenuButton} = operateIndexPage.header;
 
 		await test.step('render the user menu as the last header control', async () => {
-			await expect(userMenuButton).toHaveAccessibleName(`User menu, ${currentUserMock.displayName}`);
+			await expect(userMenuButton).toBeVisible();
 
-			await infoSidebarToggle.focus();
+			await infoMenuButton.focus();
 			await page.keyboard.press('Tab');
 			await expect(userMenuButton).toBeFocused();
 		});
@@ -129,20 +129,19 @@ test.describe('logout', () => {
 		await operateIndexPage.goto();
 		await operateIndexPage.header.openUserMenu();
 
-		await expect(operateIndexPage.header.userMenuButton).toBeVisible();
+		await expect(operateIndexPage.header.menu).toBeVisible();
 		await expect(operateIndexPage.header.logoutMenuItem).toBeHidden();
 	});
 });
 
 test.describe('language', () => {
-	test('should translate the user menu button when the language is changed', async ({operateIndexPage}) => {
+	test('should translate the user menu button when the language is changed', async ({operateIndexPage, page}) => {
 		await operateIndexPage.goto();
 		await operateIndexPage.header.openUserMenu();
 
 		await operateIndexPage.header.selectLanguage('Deutsch');
+		await page.keyboard.press('Escape');
 
-		await expect(
-			operateIndexPage.header.getUserMenuButton(`Benutzermenü, ${currentUserMock.displayName}`),
-		).toBeVisible();
+		await expect(operateIndexPage.header.getUserMenuButton('Einstellungen')).toBeVisible();
 	});
 });

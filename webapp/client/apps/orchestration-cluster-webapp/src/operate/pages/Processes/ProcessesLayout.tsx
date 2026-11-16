@@ -22,7 +22,7 @@ type ProcessesNavigationBlocker = {status: 'idle' | 'blocked'; proceed?: () => v
 function ProcessesLayout({title, ...props}: ComponentProps<typeof InstancesList> & {title?: string}) {
 	const {t} = useTranslation();
 	return (
-		<Container id="main-content" tabIndex={-1}>
+		<Container>
 			<VisuallyHiddenH1>{title ?? t('operate.processes.title')}</VisuallyHiddenH1>
 			<InstancesList {...props} />
 		</Container>
