@@ -146,4 +146,85 @@ class ProcessDefinitionFilterTransformerTest extends AbstractTransformerTest {
                       });
             });
   }
+
+  @Test
+  void shouldMatchNameLikeCaseInsensitively() {
+    // given
+    final var filter =
+        FilterBuilders.processDefinition(f -> f.nameOperations(Operation.like("*invoice*")));
+
+    // when
+    final var searchRequest = transformQuery(filter);
+
+    // then
+    assertThat(searchRequest.queryOption())
+        .isInstanceOfSatisfying(
+            SearchWildcardQuery.class,
+            w -> {
+              assertThat(w.field()).isEqualTo("name");
+              assertThat(w.value()).isEqualTo("*invoice*");
+              assertThat(w.caseInsensitive()).isTrue();
+            });
+  }
+
+  @Test
+  void shouldKeepProcessDefinitionIdLikeCaseSensitive() {
+    // given
+    final var filter =
+        FilterBuilders.processDefinition(
+            f -> f.processDefinitionIdOperations(Operation.like("*invoice*")));
+
+    // when
+    final var searchRequest = transformQuery(filter);
+
+    // then
+    assertThat(searchRequest.queryOption())
+        .isInstanceOfSatisfying(
+            SearchWildcardQuery.class,
+            w -> {
+              assertThat(w.field()).isEqualTo("bpmnProcessId");
+              assertThat(w.caseInsensitive()).isFalse();
+            });
+  }
+
+  @Test
+  void shouldKeepNameEqualsExact() {
+    // given
+    final var filter = FilterBuilders.processDefinition(f -> f.names("Invoice"));
+
+    // when
+    final var searchRequest = transformQuery(filter);
+
+    // then
+    assertThat(searchRequest.queryOption())
+        .isInstanceOfSatisfying(
+            SearchTermQuery.class,
+            t -> {
+              assertThat(t.field()).isEqualTo("name");
+              assertThat(t.value().stringValue()).isEqualTo("Invoice");
+            });
+  }
+
+  @Test
+  void shouldMatchNameLikeInsideOrGroupCaseInsensitively() {
+    // given
+    final var filter =
+        FilterBuilders.processDefinition(
+            f ->
+                f.addOrOperation(
+                    FilterBuilders.processDefinition(
+                        o -> o.nameOperations(Operation.like("*invoice*")))));
+
+    // when
+    final var searchRequest = transformQuery(filter);
+
+    // then: a single or-group collapses to its own query
+    assertThat(searchRequest.queryOption())
+        .isInstanceOfSatisfying(
+            SearchWildcardQuery.class,
+            w -> {
+              assertThat(w.field()).isEqualTo("name");
+              assertThat(w.caseInsensitive()).isTrue();
+            });
+  }
 }

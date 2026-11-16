@@ -73,7 +73,7 @@ public class ProcessDefinitionFilterTransformer
   }
 
   private List<SearchQuery> getNamesQuery(final List<Operation<String>> names) {
-    return stringOperations(NAME, names);
+    return stringOperations(NAME, names, true);
   }
 
   private List<SearchQuery> getProcessDefinitionIdsQuery(

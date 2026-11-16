@@ -494,6 +494,11 @@ public final class SearchQueryBuilders {
 
   public static <C extends List<Operation<String>>> List<SearchQuery> stringOperations(
       final String field, final C operations) {
+    return stringOperations(field, operations, false);
+  }
+
+  public static <C extends List<Operation<String>>> List<SearchQuery> stringOperations(
+      final String field, final C operations, final boolean caseInsensitiveLike) {
     if (operations == null || operations.isEmpty()) {
       return List.of();
     } else {
@@ -508,7 +513,7 @@ public final class SearchQueryBuilders {
                   case NOT_EXISTS -> mustNot(exists(field));
                   case IN -> stringTerms(field, op.values());
                   case NOT_IN -> mustNot(stringTerms(field, op.values()));
-                  case LIKE -> wildcardQuery(field, op.value());
+                  case LIKE -> wildcardQuery(field, op.value(), caseInsensitiveLike);
                   default -> throw unexpectedOperation("String", op.operator());
                 });
           });
