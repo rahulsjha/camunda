@@ -1,0 +1,300 @@
+[INFO] 
+[INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ webapps-schema ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.6.1:test (default-test) @ webapps-schema ---
+[INFO] 
+[INFO] ----------------< io.camunda:camunda-search-test-utils >----------------
+[INFO] Building Camunda Search Test Utils 8.11.0-SNAPSHOT               [43/46]
+[INFO]   from /src/search/search-test-utils/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] Cache is DISABLED on project level for io.camunda:camunda-search-test-utils
+[INFO] 
+[INFO] --- checkstyle:3.6.0:check (validate-java) @ camunda-search-test-utils ---
+[INFO] 
+[INFO] --- enforcer:3.7.0:enforce (enforce-maven-version) @ camunda-search-test-utils ---
+[INFO] Skipping Rule Enforcement.
+[INFO] 
+[INFO] --- enforcer:3.7.0:enforce (enforce-dependency-convergence) @ camunda-search-test-utils ---
+[INFO] Skipping Rule Enforcement.
+[INFO] 
+[INFO] --- enforcer:3.7.0:enforce (enforce-unique-dependencies) @ camunda-search-test-utils ---
+[INFO] Skipping Rule Enforcement.
+[INFO] 
+[INFO] --- jacoco:0.8.16:prepare-agent (coverage-initialize) @ camunda-search-test-utils ---
+[INFO] argLine set to -javaagent:/root/.m2/repository/cached/org/jacoco/org.jacoco.agent/0.8.16/org.jacoco.agent-0.8.16-runtime.jar=destfile=/src/search/search-test-utils/target/jacoco.exec
+[INFO] 
+[INFO] --- spotless:3.11.0:apply (spotless-format) @ camunda-search-test-utils ---
+[INFO] Spotless apply skipped
+[INFO] 
+[INFO] --- license:5.1.2:format (add-license) @ camunda-search-test-utils ---
+[INFO] License Plugin is Skipped
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ camunda-search-test-utils ---
+[INFO] skip non existing resourceDirectory /src/search/search-test-utils/src/main/resources
+[INFO] 
+[INFO] --- flatten:1.9.0:flatten (flatten) @ camunda-search-test-utils ---
+[INFO] Generating flattened POM of project io.camunda:camunda-search-test-utils:jar:8.11.0-SNAPSHOT...
+[INFO] 
+[INFO] --- compiler:3.16.0:compile (default-compile) @ camunda-search-test-utils ---
+[INFO] Compiling 5 source files with javac [debug parameters release 21] to target/classes
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ camunda-search-test-utils ---
+[INFO] skip non existing resourceDirectory /src/search/search-test-utils/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ camunda-search-test-utils ---
+[INFO] Compiling 1 source file with javac [debug parameters release 21] to target/test-classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[INFO] /src/search/search-test-utils/src/test/java/io/camunda/search/test/utils/SearchClientAdapterTest.java: /src/search/search-test-utils/src/test/java/io/camunda/search/test/utils/SearchClientAdapterTest.java uses unchecked or unsafe operations.
+[INFO] /src/search/search-test-utils/src/test/java/io/camunda/search/test/utils/SearchClientAdapterTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- surefire:3.6.1:test (default-test) @ camunda-search-test-utils ---
+[INFO] 
+[INFO] -----------------< io.camunda:camunda-schema-manager >------------------
+[INFO] Building Camunda Schema manager 8.11.0-SNAPSHOT                  [44/46]
+[INFO]   from /src/schema-manager/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] Cache is DISABLED on project level for io.camunda:camunda-schema-manager
+[INFO] 
+[INFO] --- checkstyle:3.6.0:check (validate-java) @ camunda-schema-manager ---
+[INFO] 
+[INFO] --- enforcer:3.7.0:enforce (enforce-maven-version) @ camunda-schema-manager ---
+[INFO] Skipping Rule Enforcement.
+[INFO] 
+[INFO] --- enforcer:3.7.0:enforce (enforce-dependency-convergence) @ camunda-schema-manager ---
+[INFO] Skipping Rule Enforcement.
+[INFO] 
+[INFO] --- enforcer:3.7.0:enforce (enforce-unique-dependencies) @ camunda-schema-manager ---
+[INFO] Skipping Rule Enforcement.
+[INFO] 
+[INFO] --- dependency:3.11.0:properties (default) @ camunda-schema-manager ---
+[INFO] 
+[INFO] --- jacoco:0.8.16:prepare-agent (coverage-initialize) @ camunda-schema-manager ---
+[INFO] argLine set to -javaagent:/root/.m2/repository/cached/org/jacoco/org.jacoco.agent/0.8.16/org.jacoco.agent-0.8.16-runtime.jar=destfile=/src/schema-manager/target/jacoco.exec
+[INFO] 
+[INFO] --- spotless:3.11.0:apply (spotless-format) @ camunda-schema-manager ---
+[INFO] Spotless apply skipped
+[INFO] 
+[INFO] --- license:5.1.2:format (add-license) @ camunda-schema-manager ---
+[INFO] License Plugin is Skipped
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ camunda-schema-manager ---
+[INFO] skip non existing resourceDirectory /src/schema-manager/src/main/resources
+[INFO] 
+[INFO] --- flatten:1.9.0:flatten (flatten) @ camunda-schema-manager ---
+[INFO] Generating flattened POM of project io.camunda:camunda-schema-manager:jar:8.11.0-SNAPSHOT...
+[INFO] 
+[INFO] --- compiler:3.16.0:compile (default-compile) @ camunda-schema-manager ---
+[INFO] Compiling 28 source files with javac [debug parameters release 21] to target/classes
+[INFO] /src/schema-manager/src/main/java/io/camunda/search/schema/IndexMappingProperty.java: Some input files use unchecked or unsafe operations.
+[INFO] /src/schema-manager/src/main/java/io/camunda/search/schema/IndexMappingProperty.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ camunda-schema-manager ---
+[INFO] Copying 23 resources from src/test/resources to target/test-classes
+[INFO] The encoding used to copy filtered properties files has not been set. This means that the same encoding will be used to copy filtered properties files as when copying other filtered resources. This might not be what you want! Run your build with --debug to see which files might be affected. Read more at https://maven.apache.org/plugins/maven-resources-plugin/examples/filtering-properties-files.html
+[INFO] 
+[INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ camunda-schema-manager ---
+[INFO] Compiling 23 source files with javac [debug parameters release 21] to target/test-classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[INFO] /src/schema-manager/src/test/java/io/camunda/search/schema/utils/SchemaManagerITInvocationProvider.java: /src/schema-manager/src/test/java/io/camunda/search/schema/utils/SchemaManagerITInvocationProvider.java uses or overrides a deprecated API.
+[INFO] /src/schema-manager/src/test/java/io/camunda/search/schema/utils/SchemaManagerITInvocationProvider.java: Recompile with -Xlint:deprecation for details.
+[INFO] /src/schema-manager/src/test/java/io/camunda/search/schema/utils/SchemaTestUtil.java: Some input files use unchecked or unsafe operations.
+[INFO] /src/schema-manager/src/test/java/io/camunda/search/schema/utils/SchemaTestUtil.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- surefire:3.6.1:test (default-test) @ camunda-schema-manager ---
+[INFO] 
+[INFO] ---------------------< io.camunda:webapps-common >----------------------
+[INFO] Building Webapps Common 8.11.0-SNAPSHOT                          [45/46]
+[INFO]   from /src/webapps-common/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] Cache is DISABLED on project level for io.camunda:webapps-common
+[INFO] 
+[INFO] --- checkstyle:3.6.0:check (validate-java) @ webapps-common ---
+[INFO] 
+[INFO] --- enforcer:3.7.0:enforce (enforce-maven-version) @ webapps-common ---
+[INFO] Skipping Rule Enforcement.
+[INFO] 
+[INFO] --- enforcer:3.7.0:enforce (enforce-dependency-convergence) @ webapps-common ---
+[INFO] Skipping Rule Enforcement.
+[INFO] 
+[INFO] --- enforcer:3.7.0:enforce (enforce-unique-dependencies) @ webapps-common ---
+[INFO] Skipping Rule Enforcement.
+[INFO] 
+[INFO] --- jacoco:0.8.16:prepare-agent (coverage-initialize) @ webapps-common ---
+[INFO] argLine set to -javaagent:/root/.m2/repository/cached/org/jacoco/org.jacoco.agent/0.8.16/org.jacoco.agent-0.8.16-runtime.jar=destfile=/src/webapps-common/target/jacoco.exec
+[INFO] 
+[INFO] --- spotless:3.11.0:apply (spotless-format) @ webapps-common ---
+[INFO] Spotless apply skipped
+[INFO] 
+[INFO] --- license:5.1.2:format (add-license) @ webapps-common ---
+[INFO] License Plugin is Skipped
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ webapps-common ---
+[INFO] skip non existing resourceDirectory /src/webapps-common/src/main/resources
+[INFO] 
+[INFO] --- flatten:1.9.0:flatten (flatten) @ webapps-common ---
+[INFO] Generating flattened POM of project io.camunda:webapps-common:jar:8.11.0-SNAPSHOT...
+[INFO] 
+[INFO] --- compiler:3.16.0:compile (default-compile) @ webapps-common ---
+[INFO] Compiling 3 source files with javac [debug parameters release 21] to target/classes
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ webapps-common ---
+[INFO] skip non existing resourceDirectory /src/webapps-common/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ webapps-common ---
+[INFO] Compiling 1 source file with javac [debug parameters release 21] to target/test-classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[INFO] 
+[INFO] --- surefire:3.6.1:test (default-test) @ webapps-common ---
+[INFO] 
+[INFO] --------------------< io.camunda:camunda-exporter >---------------------
+[INFO] Building Camunda Exporter 8.11.0-SNAPSHOT                        [46/46]
+[INFO]   from /src/zeebe/exporters/camunda-exporter/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] Cache is DISABLED on project level for io.camunda:camunda-exporter
+[INFO] 
+[INFO] --- checkstyle:3.6.0:check (validate-java) @ camunda-exporter ---
+[INFO] 
+[INFO] --- enforcer:3.7.0:enforce (enforce-maven-version) @ camunda-exporter ---
+[INFO] Skipping Rule Enforcement.
+[INFO] 
+[INFO] --- enforcer:3.7.0:enforce (enforce-dependency-convergence) @ camunda-exporter ---
+[INFO] Skipping Rule Enforcement.
+[INFO] 
+[INFO] --- enforcer:3.7.0:enforce (enforce-unique-dependencies) @ camunda-exporter ---
+[INFO] Skipping Rule Enforcement.
+[INFO] 
+[INFO] --- jacoco:0.8.16:prepare-agent (coverage-initialize) @ camunda-exporter ---
+[INFO] argLine set to -javaagent:/root/.m2/repository/cached/org/jacoco/org.jacoco.agent/0.8.16/org.jacoco.agent-0.8.16-runtime.jar=destfile=/src/zeebe/exporters/camunda-exporter/target/jacoco.exec
+[INFO] 
+[INFO] --- spotless:3.11.0:apply (spotless-format) @ camunda-exporter ---
+[INFO] Spotless apply skipped
+[INFO] 
+[INFO] --- license:5.1.2:format (add-license) @ camunda-exporter ---
+[INFO] License Plugin is Skipped
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ camunda-exporter ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- flatten:1.9.0:flatten (flatten) @ camunda-exporter ---
+[INFO] Generating flattened POM of project io.camunda:camunda-exporter:jar:8.11.0-SNAPSHOT...
+[INFO] 
+[INFO] --- compiler:3.16.0:compile (default-compile) @ camunda-exporter ---
+[INFO] Compiling 198 source files with javac [debug parameters release 21] to target/classes
+  reason: class file for org.immutables.value.Value$Style$ValidationMethod not found
+  reason: class file for org.immutables.annotate.InjectAnnotation$Where not found
+[INFO] /src/zeebe/exporters/camunda-exporter/src/main/java/io/camunda/exporter/DefaultExporterResourceProvider.java: Some input files use or override a deprecated API.
+[INFO] /src/zeebe/exporters/camunda-exporter/src/main/java/io/camunda/exporter/DefaultExporterResourceProvider.java: Recompile with -Xlint:deprecation for details.
+[INFO] /src/zeebe/exporters/camunda-exporter/src/main/java/io/camunda/exporter/notifier/M2mTokenManager.java: /src/zeebe/exporters/camunda-exporter/src/main/java/io/camunda/exporter/notifier/M2mTokenManager.java uses unchecked or unsafe operations.
+[INFO] /src/zeebe/exporters/camunda-exporter/src/main/java/io/camunda/exporter/notifier/M2mTokenManager.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ camunda-exporter ---
+[INFO] Copying 7 resources from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.16.0:testCompile (default-testCompile) @ camunda-exporter ---
+[INFO] Compiling 188 source files with javac [debug parameters release 21] to target/test-classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+  reason: class file for org.immutables.value.Value$Style$ValidationMethod not found
+  reason: class file for org.immutables.annotate.InjectAnnotation$Where not found
+  reason: class file for org.immutables.value.Value$Style$ValidationMethod not found
+  reason: class file for org.immutables.annotate.InjectAnnotation$Where not found
+  reason: class file for org.immutables.value.Value$Style$ValidationMethod not found
+  reason: class file for org.immutables.annotate.InjectAnnotation$Where not found
+[INFO] /src/zeebe/exporters/camunda-exporter/src/test/java/io/camunda/exporter/utils/CamundaExporterITTemplateExtension.java: Some input files use or override a deprecated API.
+[INFO] /src/zeebe/exporters/camunda-exporter/src/test/java/io/camunda/exporter/utils/CamundaExporterITTemplateExtension.java: Recompile with -Xlint:deprecation for details.
+[INFO] /src/zeebe/exporters/camunda-exporter/src/test/java/io/camunda/exporter/AuditLogsIT.java: Some input files use unchecked or unsafe operations.
+[INFO] /src/zeebe/exporters/camunda-exporter/src/test/java/io/camunda/exporter/AuditLogsIT.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- surefire:3.6.1:test (default-test) @ camunda-exporter ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running io.camunda.exporter.CamundaExporterTest
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 50.39 s -- in io.camunda.exporter.CamundaExporterTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for Camunda BOM 8.11.0-SNAPSHOT:
+[INFO] 
+[INFO] Camunda BOM ........................................ SUCCESS [  3.115 s]
+[INFO] Zeebe Build Tools .................................. SUCCESS [  2.890 s]
+[INFO] Zeebe Parent ....................................... SUCCESS [ 30.487 s]
+[INFO] Camunda SDK Library Parent ......................... SUCCESS [  3.935 s]
+[INFO] Zeebe BPMN model API ............................... SUCCESS [06:04 min]
+[INFO] Camunda Cluster .................................... SUCCESS [ 17.284 s]
+[INFO] Camunda Spring Utils ............................... SUCCESS [  5.609 s]
+[INFO] Zeebe Gateway Protocol ............................. SUCCESS [  4.422 s]
+[INFO] Zeebe Gateway Protocol Implementation .............. SUCCESS [01:18 min]
+[INFO] Camunda Security Parent ............................ SUCCESS [  4.306 s]
+[INFO] Camunda Security Protocol .......................... SUCCESS [  4.448 s]
+[INFO] Zeebe Protocol ..................................... SUCCESS [ 21.072 s]
+[INFO] Camunda Client Java ................................ SUCCESS [06:01 min]
+[INFO] Camunda Search Domain .............................. SUCCESS [ 26.588 s]
+[INFO] Camunda Search Parent .............................. SUCCESS [  7.084 s]
+[INFO] Camunda Search Client - Reader ..................... SUCCESS [  6.436 s]
+[INFO] Camunda Search Client .............................. SUCCESS [ 11.196 s]
+[INFO] Zeebe Util ......................................... SUCCESS [  4.889 s]
+[INFO] Zeebe Atomix Parent Pom ............................ SUCCESS [  4.661 s]
+[INFO] Zeebe Atomix Utilities ............................. SUCCESS [ 24.139 s]
+[INFO] Zeebe Atomix Messaging API ......................... SUCCESS [ 15.298 s]
+[INFO] Zeebe Atomix Membership API ........................ SUCCESS [ 11.393 s]
+[INFO] Zeebe Micrometer ................................... SUCCESS [ 29.573 s]
+[INFO] Zeebe Scheduler .................................... SUCCESS [ 26.452 s]
+[INFO] Zeebe Exporter API ................................. SUCCESS [01:19 min]
+[INFO] Zeebe Test Util .................................... SUCCESS [02:11 min]
+[INFO] Zeebe Snapshots .................................... SUCCESS [01:10 min]
+[INFO] Zeebe Journal ...................................... SUCCESS [04:05 min]
+[INFO] Zeebe Atomix Cluster ............................... SUCCESS [06:45 min]
+[INFO] Zeebe Msgpack Core ................................. SUCCESS [ 20.100 s]
+[INFO] Zeebe Msgpack Value ................................ SUCCESS [01:02 min]
+[INFO] Zeebe Auth ......................................... SUCCESS [ 15.587 s]
+[INFO] Zeebe Protocol Implementation ...................... SUCCESS [ 41.850 s]
+[INFO] Zeebe Transport .................................... SUCCESS [ 38.952 s]
+[INFO] Zeebe Protocol AssertJ Assertions .................. SUCCESS [01:25 min]
+[INFO] Zeebe Protocol Test Util ........................... SUCCESS [ 21.243 s]
+[INFO] Zeebe Exporter Common .............................. SUCCESS [ 31.458 s]
+[INFO] Camunda Search Client Plugin ....................... SUCCESS [  4.999 s]
+[INFO] Camunda Search Client - Connect .................... SUCCESS [ 52.873 s]
+[INFO] Zeebe Exporter Config Support ...................... SUCCESS [ 53.708 s]
+[INFO] Zeebe Exporter Test Harness ........................ SUCCESS [ 35.520 s]
+[INFO] Webapps Schema ..................................... SUCCESS [  8.943 s]
+[INFO] Camunda Search Test Utils .......................... SUCCESS [ 16.989 s]
+[INFO] Camunda Schema manager ............................. SUCCESS [ 35.921 s]
+[INFO] Webapps Common ..................................... SUCCESS [  9.418 s]
+[INFO] Camunda Exporter ................................... SUCCESS [03:19 min]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  47:19 min
+[INFO] Finished at: 2026-11-17T17:21:37Z
+[INFO] ------------------------------------------------------------------------
