@@ -33,7 +33,10 @@ jobs:
           printf 'public class C{public static void main(String[] a){System.out.println(java.nio.charset.Charset.defaultCharset());}}' > /tmp/C.java
           java -Dfile.encoding=COMPAT /tmp/C.java
       - name: MockDmnDecisionTest
-        run: set -o pipefail; ./mvnw -B -ntp -pl testing/camunda-process-test-java test -DskipChecks -Djacoco.skip=true -Dtest=MockDmnDecisionTest -Dsurefire.failIfNoSpecifiedTests=false -DargLine="-Dfile.encoding=COMPAT" 2>&1 | tee test.log
+        env:
+          # picked up by every JVM, including the forked Surefire one, whatever argLine the pom sets
+          JAVA_TOOL_OPTIONS: -Dfile.encoding=COMPAT
+        run: set -o pipefail; ./mvnw -B -ntp -pl testing/camunda-process-test-java test -DskipChecks -Djacoco.skip=true -Dtest=MockDmnDecisionTest -Dsurefire.failIfNoSpecifiedTests=false 2>&1 | tee test.log
       - name: Summary
         if: always()
         run: grep -E "Tests run:|FAIL|expected|Expecting|BUILD|ERROR\]" test.log | head -40
