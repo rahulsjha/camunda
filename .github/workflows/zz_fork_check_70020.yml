@@ -25,7 +25,7 @@ jobs:
           cache: maven
       - name: Use the code before the fix
         if: matrix.variant == 'unfixed'
-        run: git checkout bb9bc0ea3da --testing/camunda-process-test-java/src/main/java/io/camunda/process/test/impl/mock/MockDmnDecisionBuilderImpl.java && git diff --cached --stat
+        run: git checkout bb9bc0ea3da -- testing/camunda-process-test-java/src/main/java/io/camunda/process/test/impl/mock/MockDmnDecisionBuilderImpl.java && git diff --cached --stat
       - name: Install upstream modules
         run: ./mvnw -B -ntp -T1C -pl testing/camunda-process-test-java -am install -DskipTests -DskipChecks -Djacoco.skip=true
       - name: Default charset under -Dfile.encoding=COMPAT
