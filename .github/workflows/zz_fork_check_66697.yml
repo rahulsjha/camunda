@@ -1,0 +1,38 @@
+name: fork-check-66697
+on:
+  push:
+    branches: [ci/66697]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - name: Start OpenSearch 3
+        env:
+          IMAGE_VERSION: 3.7.0
+        run: |
+          docker compose -f db/docker-compose.yml --project-name db up -d opensearch
+          for i in $(seq 1 60); do curl -sf http://localhost:9200 >/dev/null && break; sleep 5; done
+          curl -s http://localhost:9200
+      - name: Build
+        run: ./mvnw -B -ntp -T1C -pl qa/acceptance-tests -am install -DskipTests -DskipChecks -PskipFrontendBuild -Dmaven.javadoc.skip=true
+      - name: Spotless check of the changed module
+        run: ./mvnw -B -ntp -pl qa/acceptance-tests spotless:check
+      - name: DeleteProcessInstanceHistoryIT on OpenSearch, five runs
+        run: |
+          for i in 1 2 3 4 5; do
+            echo "::group::run $i"
+            ./mvnw -B -ntp -pl qa/acceptance-tests verify -DskipUTs -DskipChecks -PskipFrontendBuild \
+              -Dit.test=DeleteProcessInstanceHistoryIT -Dfailsafe.rerunFailingTestsCount=0 \
+              -Dtest.integration.camunda.database.type=os -Dtest.integration.camunda.database.fast-init=true \
+              2>&1 | tee run$i.log | grep -E "Tests run:|FAIL|ERROR\]" | tail -5
+            echo "::endgroup::"
+          done
+          grep -h "Tests run:.*DeleteProcessInstanceHistoryIT" run*.log || true
+          ! grep -l "BUILD FAILURE" run*.log
