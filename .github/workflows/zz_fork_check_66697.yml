@@ -28,7 +28,7 @@ jobs:
         run: |
           for i in 1 2 3 4 5; do
             echo "::group::run $i"
-            ./mvnw -B -ntp -pl qa/acceptance-tests verify -DskipUTs -DskipChecks -PskipFrontendBuild \
+            ./mvnw -B -ntp -pl qa/acceptance-tests verify -DskipUTs -DskipChecks -PskipFrontendBuild,multi-db-test \
               -Dit.test=DeleteProcessInstanceHistoryIT -Dfailsafe.rerunFailingTestsCount=0 \
               -Dtest.integration.camunda.database.type=os -Dtest.integration.camunda.database.fast-init=true \
               2>&1 | tee run$i.log | grep -E "Tests run:|FAIL|ERROR\]" | tail -5
@@ -36,3 +36,5 @@ jobs:
           done
           grep -h "Tests run:.*DeleteProcessInstanceHistoryIT" run*.log || true
           ! grep -l "BUILD FAILURE" run*.log
+          # fail if the IT did not actually run
+          for f in run*.log; do grep -qE "Tests run: ([1-9][0-9]+), Failures: 0, Errors: 0" "$f" || { echo "no tests ran in $f"; exit 1; }; done
